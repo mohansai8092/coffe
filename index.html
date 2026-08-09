@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brew Bliss — Premium 3D Digital Marketing Campaign</title>
+  <meta name="description" content="Experience Brew Bliss 3D: Artisanal Coffee Roastery with floating coffee beans, warm cinematic coffee shop ambiance, interactive customizer, 30% OFF discount, QR code scanner, customer reviews, and Buy Now checkout.">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Local Standalone Vendor Libraries -->
+  <script src="js/vendor/three.min.js"></script>
+  <script src="js/vendor/OrbitControls.js"></script>
+  <script src="js/vendor/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- WebGL 3D Canvas Container -->
+  <div id="webgl-container"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="brand-badge">
+      <img src="assets/brew_bliss_logo.jpg" alt="Brew Bliss Logo" class="brand-logo-img">
+      <div class="brand-info">
+        <h1>BREW BLISS</h1>
+        <p>Artisanal Roastery</p>
+      </div>
+    </div>
+
+    <!-- Live Promotional Pill & 30% OFF Banner -->
+    <div class="promo-pill-container">
+      <div class="promo-pill" onclick="BrewUI.openModal('bogoModal')">
+        <span>🔥</span>
+        <span>BUY 1 GET 1 FREE</span>
+      </div>
+      <div class="discount-banner-pill" onclick="BrewUI.openModal('checkoutModal')">
+        <span>⚡ 30% OFF CODE: <strong>BLISS30</strong></span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="header-actions">
+      <button class="ctrl-btn active" id="btnRotateToggle">
+        <span>🔄</span> <span class="lbl">Auto-Rotate: ON</span>
+      </button>
+      <button class="ctrl-btn" id="btnAudioToggle">
+        <span>🎵</span> <span class="lbl">Café Vibe: OFF 🔇</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Social Marketing Engagement Bar -->
+  <div class="social-marketing-bar">
+    <button class="social-btn ig-btn" id="btnIgFollow">
+      <span class="social-icon">📷</span> Instagram <span class="badge-count" id="cntIg">125,482</span> <span class="btn-action">+ Follow</span>
+    </button>
+
+    <button class="social-btn fb-btn" id="btnFbLike">
+      <span class="social-icon">👍</span> Facebook <span class="badge-count" id="cntFb">84,210</span> <span class="btn-action">Like</span>
+    </button>
+
+    <button class="social-btn yt-btn" id="btnYtSub">
+      <span class="social-icon">▶️</span> YouTube <span class="badge-count" id="cntYt">50,195</span> <span class="btn-action">Subscribe</span>
+    </button>
+
+    <button class="social-btn qr-scanner-btn" onclick="BrewUI.openModal('qrScannerModal')">
+      <span class="social-icon">📷</span> Scan QR Code
+    </button>
+  </div>
+
+  <!-- Customer Reviews Floating Widget -->
+  <div class="reviews-widget-badge" onclick="BrewUI.openModal('reviewsModal')">
+    <div class="stars">⭐⭐⭐⭐⭐</div>
+    <div class="review-text"><strong>4.9 / 5.0</strong> (2,450+ Customer Reviews)</div>
+    <div class="review-sub">"Best cold brew in town!" — Sarah K.</div>
+  </div>
+
+  <!-- Interactive 3D Hotspot Layer -->
+  <div class="hotspot-layer">
+    <div class="hotspot hs-bogo" data-action="bogo">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-label">📺 BUY 1 GET 1 FREE Screen</div>
+    </div>
+
+    <div class="hotspot hs-beans" data-action="customizer">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-label">☕ 85+ Floating Beans & Customizer</div>
+    </div>
+
+    <div class="hotspot hs-qr" data-action="qr">
+      <div class="hotspot-dot"></div>
+      <div class="hotspot-label">📱 Scan QR Code Stand</div>
+    </div>
+  </div>
+
+  <!-- Bottom Camera View Selector Navigation -->
+  <nav class="bottom-nav">
+    <button class="cam-btn active" data-view="hero">
+      <span>☕</span> Hero Cup
+    </button>
+    <button class="cam-btn" data-view="wide">
+      <span>🏬</span> Full Cafe View
+    </button>
+    <button class="cam-btn" data-view="bogo">
+      <span>📺</span> BOGO Screen
+    </button>
+    <button class="cam-btn" data-view="qr">
+      <span>📱</span> QR Stand
+    </button>
+    <button class="cam-btn" data-view="top">
+      <span>✨</span> Latte Art
+    </button>
+    <button class="cam-btn" data-view="tour" style="border: 1px solid var(--primary-gold);">
+      <span>🎬</span> Cinematic Tour
+    </button>
+  </nav>
+
+  <!-- Action Bar Floating Buy Now & Order Buttons -->
+  <div class="action-float-bar">
+    <button class="btn-buy-now" onclick="BrewUI.openModal('checkoutModal')">
+      ⚡ BUY NOW — 30% OFF (BLISS30)
+    </button>
+    <button class="btn-order-now" onclick="BrewUI.openModal('menuModal')">
+      🛍️ MENU & DELIVERY
+    </button>
+  </div>
+
+  <!-- MODAL 1: BOGO Promotion Modal -->
+  <div class="modal-wrapper" id="bogoModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>🎉 BUY 1 GET 1 FREE</h2>
+        <p>Special Young Customer Marketing Offer</p>
+      </div>
+      <div class="bogo-card-content">
+        <img src="assets/bogo_promo_banner.jpg" alt="Buy 1 Get 1 Free Banner" class="bogo-banner-preview">
+        <p style="margin-bottom: 12px; color: var(--text-muted);">
+          Buy any handcrafted Artisanal Espresso, Nitro Cold Brew, or Caramel Macchiato and receive a second drink of equal value for FREE!
+        </p>
+        <button class="btn-primary-action" id="btnClaimBOGO">
+          ⚡ CLAIM BOGO COUPON NOW
+        </button>
+        <div class="code-box hidden" id="bogoCodeBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Interactive 3D Coffee Customizer -->
+  <div class="modal-wrapper" id="customizerModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>☕ CUSTOMIZE YOUR BREW</h2>
+        <p>Watch the 3D coffee cup & floating beans update live</p>
+      </div>
+      <div class="customizer-form">
+        <div class="customizer-group">
+          <label for="optRoast">🔥 Bean Roast Level</label>
+          <select id="optRoast" class="customizer-select">
+            <option value="medium">Medium Roast — Caramel & Chocolate Notes</option>
+            <option value="light">Light Roast — Floral & Citrus Yirgacheffe</option>
+            <option value="dark">Dark Roast — Bold Dark Cocoa & Spice</option>
+          </select>
+        </div>
+
+        <div class="customizer-group">
+          <label for="optMilk">🥛 Artisanal Milk Choice</label>
+          <select id="optMilk" class="customizer-select">
+            <option value="oat">Barista Oat Milk (Creamy Velvet)</option>
+            <option value="almond">Organic Almond Milk</option>
+            <option value="whole">Fresh Dairy Whole Milk</option>
+          </select>
+        </div>
+
+        <div class="customizer-group">
+          <label for="optSyrup">🍯 Flavor Syrup Infusion</label>
+          <select id="optSyrup" class="customizer-select">
+            <option value="caramel">Salted Caramel Drizzle</option>
+            <option value="vanilla">Madagascar Vanilla Bean</option>
+            <option value="hazelnut">Roasted Hazelnut</option>
+          </select>
+        </div>
+
+        <button class="btn-primary-action" onclick="BrewUI.openModal('checkoutModal')">
+          🛒 BUY NOW WITH 30% OFF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Dedicated Menu & Online Ordering Modal -->
+  <div class="modal-wrapper" id="menuModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>☕ ARTISANAL COFFEE MENU</h2>
+        <p>All items eligible for 30% OFF code: <strong>BLISS30</strong></p>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Velvet Caramel Macchiato', 5.50)">
+          <h4>Velvet Caramel Macchiato</h4>
+          <p class="desc-text">Rich espresso with creamy oat milk & salted caramel</p>
+          <span>$5.50 <small style="text-decoration: line-through; color: #aaa;">$7.85</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Nitro Cold Brew Reserve', 5.00)">
+          <h4>Nitro Cold Brew Reserve</h4>
+          <p class="desc-text">Steeped 24hrs for ultra-smooth velvet finish</p>
+          <span>$5.00 <small style="text-decoration: line-through; color: #aaa;">$7.15</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Vanilla Bean Espresso', 4.80)">
+          <h4>Vanilla Bean Espresso</h4>
+          <p class="desc-text">Double shot with organic Madagascar vanilla</p>
+          <span>$4.80 <small style="text-decoration: line-through; color: #aaa;">$6.85</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Matcha Cloud Latte', 5.80)">
+          <h4>Matcha Cloud Latte</h4>
+          <p class="desc-text">Ceremonial Uji matcha with coconut foam</p>
+          <span>$5.80 <small style="text-decoration: line-through; color: #aaa;">$8.25</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Avocado Toast & Brew Combo', 11.00)">
+          <h4>Avocado Toast & Brew</h4>
+          <p class="desc-text">Sourdough avocado toast with pour over coffee</p>
+          <span>$11.00 <small style="text-decoration: line-through; color: #aaa;">$15.70</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+        <div class="menu-item-card" onclick="BrewUI.selectProduct('Smoked Hazelnut Mocha', 5.60)">
+          <h4>Smoked Hazelnut Mocha</h4>
+          <p class="desc-text">Dark Belgian chocolate & roasted hazelnut</p>
+          <span>$5.60 <small style="text-decoration: line-through; color: #aaa;">$8.00</small></span>
+          <button class="menu-buy-btn">Select & Buy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: QR Code Scanner Overlay Modal -->
+  <div class="modal-wrapper" id="qrScannerModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>📷 QR CODE SCANNER</h2>
+        <p>Point camera at café table QR code or click simulate scan</p>
+      </div>
+
+      <div class="qr-viewfinder">
+        <div class="laser-scanner-line"></div>
+        <div class="qr-placeholder-target">
+          <span style="font-size: 3.5rem;">📱</span>
+          <p>Scanning Brew Bliss Table QR...</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button class="btn-primary-action" id="btnSimulateScan">
+          ⚡ SIMULATE QR SCAN & UNLOCK 30% OFF
+        </button>
+        <div class="code-box hidden" id="qrScanSuccess">
+          ✅ QR CODE VERIFIED! 30% Discount Code <strong>BLISS30</strong> automatically applied to your cart!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: Buy Now & Instant Checkout Modal -->
+  <div class="modal-wrapper" id="checkoutModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>🛍️ INSTANT CHECKOUT</h2>
+        <p>30% Limited Time Discount Code Applied</p>
+      </div>
+
+      <div class="checkout-summary">
+        <div class="cart-line">
+          <span id="cartItemName">Velvet Caramel Macchiato (Large)</span>
+          <span id="cartItemOrigPrice">$7.85</span>
+        </div>
+        <div class="cart-line discount-line">
+          <span>⚡ 30% OFF Promo (BLISS30)</span>
+          <span id="cartDiscount">-$2.35</span>
+        </div>
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 12px 0;">
+        <div class="cart-line total-line">
+          <strong>TOTAL PAYABLE:</strong>
+          <strong id="cartItemFinalPrice" style="color: var(--primary-gold); font-size: 1.3rem;">$5.50</strong>
+        </div>
+
+        <div style="margin-top: 18px;">
+          <label style="font-weight: 700; color: var(--primary-gold); display: block; margin-bottom: 8px;">Delivery Option:</label>
+          <select class="customizer-select" id="checkoutDelivery">
+            <option value="express">🛵 Express Doorstep Delivery (25 Mins)</option>
+            <option value="pickup">🛍️ In-Café Pickup (Ready in 5 Mins)</option>
+          </select>
+        </div>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button class="btn-primary-action" style="flex: 1; background: #ffffff; color: #000;" onclick="BrewUI.processPayment('Apple Pay')">
+             Pay
+          </button>
+          <button class="btn-primary-action" style="flex: 1; background: #4285f4; color: #fff;" onclick="BrewUI.processPayment('Google Pay')">
+            G Pay
+          </button>
+        </div>
+
+        <button class="btn-primary-action" style="margin-top: 12px;" onclick="BrewUI.processPayment('Credit Card')">
+          💳 PAY WITH CARD ($5.50)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: Customer Reviews Display Modal -->
+  <div class="modal-wrapper" id="reviewsModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close">&times;</button>
+      <div class="modal-header">
+        <h2>⭐⭐⭐⭐⭐ CUSTOMER REVIEWS</h2>
+        <p>Over 2,450+ Happy Coffee Lovers</p>
+      </div>
+
+      <div class="reviews-list">
+        <div class="review-item">
+          <div class="review-user">
+            <strong>Sarah Jenkins</strong> <span class="stars">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p>"The Velvet Caramel Macchiato is literally out of this world! The 3D ordering experience made it super fun, and the 30% OFF code worked instantly."</p>
+          <small style="color: var(--text-muted);">Verified Customer • 2 hours ago</small>
+        </div>
+
+        <div class="review-item">
+          <div class="review-user">
+            <strong>Alex Rivera</strong> <span class="stars">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p>"Love the modern cafe vibe and lo-fi sound generator. Claimed the Buy 1 Get 1 Free deal with my friend!"</p>
+          <small style="color: var(--text-muted);">Verified Customer • 5 hours ago</small>
+        </div>
+
+        <div class="review-item">
+          <div class="review-user">
+            <strong>Maya Lin</strong> <span class="stars">⭐⭐⭐⭐⭐</span>
+          </div>
+          <p>"Scanned the table QR code and got my Oat Milk Cold Brew delivered straight to our booth. 10/10 service!"</p>
+          <small style="color: var(--text-muted);">Verified Customer • Yesterday</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/materials.js"></script>
+  <script src="js/models.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
